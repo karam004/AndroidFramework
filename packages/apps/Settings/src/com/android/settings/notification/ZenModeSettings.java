@@ -186,20 +186,6 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
             }
         });
 
-        mEnableQueuing = (SwitchPreference) important.findPreference(KEY_ENABLE_QUEUING);
-        mEnableQueuing.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (mDisableListeners) return true;
-                final boolean val = (Boolean) newValue;
-                if (val == mConfig.allowQueuing) return true;
-                if (DEBUG) Log.d(TAG, "onPrefChange allowQueuing=" + val);
-                final ZenModeConfig newConfig = mConfig.copy();
-                newConfig.allowQueuing= val;
-                return setZenModeConfig(newConfig);
-            }
-        });
-
         mMessages = (SwitchPreference) important.findPreference(KEY_MESSAGES);
         mMessages.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
