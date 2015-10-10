@@ -157,6 +157,7 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         final PreferenceScreen root = getPreferenceScreen();
 
         mConfig = getZenModeConfig();
+        Log.d(TAG, " Loading config on screen Loading" + mConfig);
         if (DEBUG) Log.d(TAG, "Loaded mConfig=" + mConfig);
 
         PREF_ZEN_MODE.init(this);
@@ -182,6 +183,21 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
                 if (DEBUG) Log.d(TAG, "onPrefChange allowCalls=" + val);
                 final ZenModeConfig newConfig = mConfig.copy();
                 newConfig.allowCalls = val;
+                return setZenModeConfig(newConfig);
+            }
+        });
+
+        mEnableQueuing = (SwitchPreference) important.findPreference(KEY_ENABLE_QUEUING);
+        Log.d(TAG, " Karamveer outside listener allowQueuing");
+        mEnableQueuing.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if (mDisableListeners) return true;
+                final boolean val = (Boolean) newValue;
+                if (val == mConfig.allowQueuing) return true;
+                if (DEBUG) Log.d(TAG, "onPrefChange allowQueuing=" + val);
+                final ZenModeConfig newConfig = mConfig.copy();
+                newConfig.allowQueuing = val;
                 return setZenModeConfig(newConfig);
             }
         });
@@ -407,6 +423,14 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         if (mCalls != null) {
             mCalls.setChecked(mConfig.allowCalls);
         }
+
+        //Karamveer
+	if(mEnableQueuing != null)
+	{
+            Log.d(TAG, "Inside updateControls Functions ,Setting option Enable Queuing to " + mConfig.allowQueuing);
+	    mEnableQueuing.setChecked(mConfig.allowQueuing);
+	}
+
         mMessages.setChecked(mConfig.allowMessages);
         mStarred.setSelectedValue(mConfig.allowFrom);
         mEvents.setChecked(mConfig.allowEvents);
@@ -514,6 +538,7 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
                 if (DEBUG) Log.d(TAG, "Saved mConfig=" + mConfig);
                 updateEndSummary();
                 updateStarredEnabled();
+                Log.d(TAG, "Inside setZenModeConfig function,saved allowQueuing");
             }
             return success;
         } catch (Exception e) {
