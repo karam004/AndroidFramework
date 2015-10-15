@@ -81,6 +81,8 @@ interface INotificationManager
     oneway void setAutomaticZenModeConditions(in Uri[] conditionIds);
     Condition[] getAutomaticZenModeConditions();
 
-    //abhishek
+    // abhishek
     boolean isQueuingEnabled();
+    boolean setQueingTrue();
+    boolean setQueingFalse();
 }

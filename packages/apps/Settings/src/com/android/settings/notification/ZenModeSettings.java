@@ -196,9 +196,31 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
                 final boolean val = (Boolean) newValue;
                 if (val == mConfig.allowQueuing) return true;
                 if (DEBUG) Log.d(TAG, "onPrefChange allowQueuing=" + val);
-                final ZenModeConfig newConfig = mConfig.copy();
-                newConfig.allowQueuing = val;
-                return setZenModeConfig(newConfig);
+
+                final INotificationManager nm = INotificationManager.Stub.asInterface(
+                        ServiceManager.getService(Context.NOTIFICATION_SERVICE));
+                boolean success = false;
+                try {
+
+                    if (val) {
+                        success = nm.setQueingTrue();
+                    }else {
+                        success = nm.setQueingFalse();
+                    }
+                    final ZenModeConfig config = nm.getZenModeConfig();
+
+                    if (success) {
+                        mConfig = config;
+                        if (DEBUG) Log.d(TAG, "Saved mConfig=" + mConfig);
+                        updateEndSummary();
+                        updateStarredEnabled();
+                    }
+
+                }catch (Exception e) {
+                   Log.w(TAG, "Error calling NotificationManagerService", e);
+                   return false;
+                }
+                return success;
             }
         });
 
@@ -427,7 +449,7 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         //Karamveer
 	if(mEnableQueuing != null)
 	{
-            Log.d(TAG, "Inside updateControls Functions ,Setting option Enable Queuing to " + mConfig.allowQueuing);
+        Log.d(TAG, "Inside updateControls Functions ,Setting option Enable Queuing to " + mConfig.allowQueuing);
 	    mEnableQueuing.setChecked(mConfig.allowQueuing);
 	}
 
