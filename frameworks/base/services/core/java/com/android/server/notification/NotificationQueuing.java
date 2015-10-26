@@ -5,16 +5,23 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 
+import android.util.Log;
+
+
 
 /**
 *   Class to stores the notifications when Queuing is enabled
 *   
 */
 public class NotificationQueuing {
+
+    private static String TAG = "NotificationQueuing";
     
     private Queue<NotificationElements> notificationQueue;  
 
+
     public NotificationQueuing() {
+        Log.d(TAG, "initializing notification queue");
         notificationQueue = new LinkedList<>();
     }
 
@@ -43,7 +50,7 @@ public class NotificationQueuing {
             this.tag = tag;
         }
 
-        public void setId() {
+        public void setId(int id) {
             this.id = id;
         }
     }
