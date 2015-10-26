@@ -85,4 +85,6 @@ interface INotificationManager
     boolean isQueuingEnabled();
     boolean setQueingTrue();
     boolean setQueingFalse();
+
+    void pushNotificationToQueue(String tag, int id, in Notification notification);
 }

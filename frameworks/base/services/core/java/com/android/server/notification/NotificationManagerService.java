@@ -250,6 +250,9 @@ public class NotificationManagerService extends SystemService {
     private ConditionProviders mConditionProviders;
     private NotificationUsageStats mUsageStats;
 
+    // abhishek <notificationQueue>
+    private NotificationQueuing notificationQueuing;
+
     private static final int MY_UID = Process.myUid();
     private static final int MY_PID = Process.myPid();
     private static final int REASON_DELEGATE_CLICK = 1;
@@ -969,6 +972,9 @@ public class NotificationManagerService extends SystemService {
 
         publishBinderService(Context.NOTIFICATION_SERVICE, mService);
         publishLocalService(NotificationManagerInternal.class, mInternalService);
+
+        // abhishek <initialize>
+        notificationQueuing = new NotificationQueuing();
     }
 
     /**
@@ -1582,6 +1588,11 @@ public class NotificationManagerService extends SystemService {
             final ZenModeConfig newConfig = mZenModeHelper.getConfig().copy();
             newConfig.allowQueuing = false;
             return setZenModeConfig(newConfig);
+        }
+
+        @Override
+        public void pushNotificationToQueue(String tag, int id, Notification notification) {
+            notificationQueuing.add(tag, id, notification);
         }
     };
 

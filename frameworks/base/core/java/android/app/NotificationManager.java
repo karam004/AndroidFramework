@@ -147,8 +147,13 @@ public class NotificationManager
         // abhishek
         try{
             Log.d("AKS ", "isQueuingEnabled :" + service.isQueuingEnabled());
+            if (service.isQueuingEnabled()) {
+                service.pushNotificationToQueue(tag, id, notification);
+                return;
+            }
         } catch (RemoteException e) {
         }
+        
         String pkg = mContext.getPackageName();
         if (notification.sound != null) {
             notification.sound = notification.sound.getCanonicalUri();
