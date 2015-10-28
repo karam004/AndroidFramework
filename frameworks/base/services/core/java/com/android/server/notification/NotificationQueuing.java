@@ -4,7 +4,7 @@ package com.android.server.notification;
 import java.util.Queue;
 import java.util.LinkedList;
 
-
+import android.content.Context;
 import android.util.Log;
 import android.app.NotificationManager;
 import android.app.Notification;
@@ -18,13 +18,15 @@ import android.app.Notification;
 public class NotificationQueuing {
 
     private static String TAG = "ACSPROJECT";
+    private Context context;
     
     private Queue<NotificationElements> notificationQueue;  
 
 
-    public NotificationQueuing() {
+    public NotificationQueuing(Context context) {
         Log.d(TAG, "initializing notification queue");
         notificationQueue = new LinkedList<>();
+        this.context = context;
     }
 
     private static class NotificationElements {
@@ -74,7 +76,7 @@ public class NotificationQueuing {
     public void pollNotification() {
 
         NotificationManager mNotificationManager = 
-       (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+       (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         while(!notificationQueue.isEmpty()) {
             NotificationElements mNotificationElements = notificationQueue.poll();

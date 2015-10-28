@@ -188,14 +188,14 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         });
 
         mEnableQueuing = (SwitchPreference) important.findPreference(KEY_ENABLE_QUEUING);
-        Log.d(TAG, " Karamveer outside listener allowQueuing");
+        Log.d("ACSPROJECT", " outside listener allowQueuing");
         mEnableQueuing.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (mDisableListeners) return true;
                 final boolean val = (Boolean) newValue;
                 if (val == mConfig.allowQueuing) return true;
-                if (DEBUG) Log.d(TAG, "onPrefChange allowQueuing=" + val);
+                if (DEBUG) Log.d("ACSPROJECT", "onPrefChange allowQueuing=" + val);
 
                 final INotificationManager nm = INotificationManager.Stub.asInterface(
                         ServiceManager.getService(Context.NOTIFICATION_SERVICE));
@@ -211,7 +211,7 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
 
                     if (success) {
                         mConfig = config;
-                        if (DEBUG) Log.d(TAG, "Saved mConfig=" + mConfig);
+                        if (DEBUG) Log.d("ACSPROJECT", "Saved mConfig=" + mConfig);
                         updateEndSummary();
                         updateStarredEnabled();
                     }

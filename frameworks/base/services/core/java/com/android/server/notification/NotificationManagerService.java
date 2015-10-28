@@ -974,7 +974,7 @@ public class NotificationManagerService extends SystemService {
         publishLocalService(NotificationManagerInternal.class, mInternalService);
 
         // abhishek <initialize>
-        mNotificationQueuing = new mNotificationQueuing();
+        mNotificationQueuing = new mNotificationQueuing(getContext());
     }
 
     /**
