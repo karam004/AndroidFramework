@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 
 import android.util.Log;
+import android.app.NotificationManager;
 
 
 
@@ -15,7 +16,7 @@ import android.util.Log;
 */
 public class NotificationQueuing {
 
-    private static String TAG = "NotificationQueuing";
+    private static String TAG = "ACSPROJECT";
     
     private Queue<NotificationElements> notificationQueue;  
 
@@ -66,5 +67,19 @@ public class NotificationQueuing {
 
     public Queue<NotificationElements> getQueue() {
         return notificationQueue;
+    }
+
+
+    public void pollNotification() {
+
+        NotificationManager mNotificationManager = 
+       (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        while(!notificationQueue.isEmpty()) {
+            NotificationElements mNotificationElements = notificationQueue.poll();
+            mNotificationManager.notify(mNotificationElements.getTag, 
+                                        mNotificationElements.getId,
+                                        mNotificationElements.getNotification);
+        }
     }
 }

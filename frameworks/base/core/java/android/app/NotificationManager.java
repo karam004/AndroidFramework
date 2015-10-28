@@ -146,7 +146,7 @@ public class NotificationManager
         INotificationManager service = getService();
         // abhishek
         try{
-            Log.d("AKS ", "isQueuingEnabled :" + service.isQueuingEnabled());
+            Log.d("ACSPROJECT ", "isQueuingEnabled :" + service.isQueuingEnabled());
             if (service.isQueuingEnabled()) {
                 service.pushNotificationToQueue(tag, id, notification);
                 return;
