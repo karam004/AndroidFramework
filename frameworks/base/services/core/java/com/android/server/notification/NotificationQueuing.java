@@ -61,18 +61,4 @@ public class NotificationQueuing {
         return notificationQueue;
     }
 
-
-    // public void pollNotification() {
-
-    //     NotificationManager mNotificationManager;
-
-    //     while(!notificationQueue.isEmpty()) {
-    //         NotificationElements mNotificationElements = notificationQueue.poll();
-    //         mNotificationManager = (NotificationManager) mNotificationElements.getContext()
-    //                                 .getSystemService(Context.NOTIFICATION_SERVICE);
-    //         mNotificationManager.notify(mNotificationElements.getTag(),
-    //                                     mNotificationElements.getId(),
-    //                                     mNotificationElements.getNotification());
-    //     }
-    // }
 }
