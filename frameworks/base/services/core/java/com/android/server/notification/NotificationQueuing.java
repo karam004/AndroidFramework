@@ -13,57 +13,46 @@ import android.app.Notification;
 
 /**
 *   Class to stores the notifications when Queuing is enabled
-*   
+*
 */
 public class NotificationQueuing {
 
     private static String TAG = "ACSPROJECT";
-    private Context context;
-    
-    private Queue<NotificationElements> notificationQueue;  
+
+    private Queue<NotificationElements> notificationQueue;
 
 
-    public NotificationQueuing(Context context) {
+    public NotificationQueuing() {
         Log.d(TAG, "initializing notification queue");
         notificationQueue = new LinkedList<>();
-        this.context = context;
     }
 
-    private static class NotificationElements {
-        private Notification notification;
-        private String tag;
-        private int id;
+    public static class NotificationElements {
+        String pkg;
+        String opPkg;
+        int callingUid;
+        int callingPid;
+        String tag;
+        int id;
+        Notification notification;
+        int[] idOut;
+        int incomingUserId;
 
-        public Notification getNotification() {
-            return notification;
-        }
-
-        public String getTag() {
-            return tag;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setNotification(Notification notification) {
-            this.notification = notification;
-        }
-
-        public void setTag(String tag) {
-            this.tag = tag;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
     }
 
-    public void add(String tag, int id, Notification notification ) {
+    public void add(String pkg, String opPkg, int callingUid,
+            int callingPid, String tag, int id, Notification notification,
+            int[] idOut, int incomingUserId) {
         NotificationElements notificationElements = new NotificationElements();
-        notificationElements.setTag(tag);
-        notificationElements.setId(id);
-        notificationElements.setNotification(notification);
+        notificationElements.pkg = pkg;
+        notificationElements.opPkg = opPkg;
+        notificationElements.callingUid = callingUid;
+        notificationElements.callingPid = callingPid;
+        notificationElements.tag = tag;
+        notificationElements.id = id;
+        notificationElements.notification = notification;
+        notificationElements.idOut = idOut;
+        notificationElements.incomingUserId = incomingUserId;
 
         notificationQueue.add(notificationElements);
     }
@@ -73,16 +62,17 @@ public class NotificationQueuing {
     }
 
 
-    public void pollNotification() {
+    // public void pollNotification() {
 
-        NotificationManager mNotificationManager = 
-       (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    //     NotificationManager mNotificationManager;
 
-        while(!notificationQueue.isEmpty()) {
-            NotificationElements mNotificationElements = notificationQueue.poll();
-            mNotificationManager.notify(mNotificationElements.getTag, 
-                                        mNotificationElements.getId,
-                                        mNotificationElements.getNotification);
-        }
-    }
+    //     while(!notificationQueue.isEmpty()) {
+    //         NotificationElements mNotificationElements = notificationQueue.poll();
+    //         mNotificationManager = (NotificationManager) mNotificationElements.getContext()
+    //                                 .getSystemService(Context.NOTIFICATION_SERVICE);
+    //         mNotificationManager.notify(mNotificationElements.getTag(),
+    //                                     mNotificationElements.getId(),
+    //                                     mNotificationElements.getNotification());
+    //     }
+    // }
 }

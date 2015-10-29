@@ -121,6 +121,9 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import java.util.Queue;
+import com.android.server.notification.NotificationQueuing.NotificationElements;
+
 /** {@hide} */
 public class NotificationManagerService extends SystemService {
     static final String TAG = "NotificationService";
@@ -251,7 +254,7 @@ public class NotificationManagerService extends SystemService {
     private NotificationUsageStats mUsageStats;
 
     // abhishek <notificationQueue>
-    private mNotificationQueuing mNotificationQueuing;
+    private NotificationQueuing mNotificationQueuing;
 
     private static final int MY_UID = Process.myUid();
     private static final int MY_PID = Process.myPid();
@@ -974,7 +977,7 @@ public class NotificationManagerService extends SystemService {
         publishLocalService(NotificationManagerInternal.class, mInternalService);
 
         // abhishek <initialize>
-        mNotificationQueuing = new mNotificationQueuing(getContext());
+        mNotificationQueuing = new NotificationQueuing();
     }
 
     /**
@@ -1049,6 +1052,24 @@ public class NotificationManagerService extends SystemService {
         if (interruptionFilter == mInterruptionFilter) return;
         mInterruptionFilter = interruptionFilter;
         scheduleInterruptionFilterChanged(interruptionFilter);
+    }
+
+    // abhishek <push bcak notification >
+    private void pushBackNotification() {
+        Queue<NotificationElements> notificationQueue = mNotificationQueuing.getQueue();
+        Log.d("ACSPROJECT ", "Pushing back notification from queue size:" + notificationQueue.size() );
+        while(!notificationQueue.isEmpty()) {
+            NotificationElements notificationElements = notificationQueue.poll();
+            enqueueNotificationInternal(notificationElements.pkg ,
+                                        notificationElements.opPkg ,
+                                        notificationElements.callingUid ,
+                                        notificationElements.callingPid ,
+                                        notificationElements.tag ,
+                                        notificationElements.id ,
+                                        notificationElements.notification ,
+                                        notificationElements.idOut ,
+                                        notificationElements.incomingUserId);
+        }
     }
 
     private final IBinder mService = new INotificationManager.Stub() {
@@ -1153,6 +1174,14 @@ public class NotificationManagerService extends SystemService {
         @Override
         public void enqueueNotificationWithTag(String pkg, String opPkg, String tag, int id,
                 Notification notification, int[] idOut, int userId) throws RemoteException {
+            //abhishek
+            Log.d("ACSPROJECT ", "isQueuingEnabled :" + isQueuingEnabled());
+            if (isQueuingEnabled()) {
+                pushNotificationToQueue(pkg, opPkg,Binder.getCallingUid(),
+                    Binder.getCallingPid(), tag, id, notification, idOut, userId );
+                idOut[0] = id;
+                return;
+            }
             enqueueNotificationInternal(pkg, opPkg, Binder.getCallingUid(),
                     Binder.getCallingPid(), tag, id, notification, idOut, userId);
         }
@@ -1589,13 +1618,20 @@ public class NotificationManagerService extends SystemService {
             newConfig.allowQueuing = false;
             boolean ret = setZenModeConfig(newConfig);
 
-            mNotificationQueuing.pollNotification();
+            if (ret) {
+                pushBackNotification();
+            }
+
             return ret;
         }
 
         @Override
-        public void pushNotificationToQueue(String tag, int id, Notification notification) {
-            mNotificationQueuing.add(tag, id, notification);
+        public void pushNotificationToQueue(String pkg, String opPkg, int callingUid,
+                    int callingPid, String tag, int id, Notification notification,
+                    int[] idOut, int incomingUserId) {
+
+            mNotificationQueuing.add( pkg, opPkg, callingUid,callingPid,
+                         tag, id, notification,idOut, incomingUserId);
         }
     };
 

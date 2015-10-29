@@ -144,15 +144,15 @@ public class NotificationManager
 
         int[] idOut = new int[1];
         INotificationManager service = getService();
-        // abhishek
-        try{
-            Log.d("ACSPROJECT ", "isQueuingEnabled :" + service.isQueuingEnabled());
-            if (service.isQueuingEnabled()) {
-                service.pushNotificationToQueue(tag, id, notification);
-                return;
-            }
-        } catch (RemoteException e) {
-        }
+        // // abhishek
+        // try{
+        //     Log.d("ACSPROJECT ", "isQueuingEnabled :" + service.isQueuingEnabled());
+        //     if (service.isQueuingEnabled()) {
+        //         service.pushNotificationToQueue(tag, id, notification, mContext);
+        //         return;
+        //     }
+        // } catch (RemoteException e) {
+        // }
         
         String pkg = mContext.getPackageName();
         if (notification.sound != null) {

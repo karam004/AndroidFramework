@@ -86,5 +86,7 @@ interface INotificationManager
     boolean setQueingTrue();
     boolean setQueingFalse();
 
-    void pushNotificationToQueue(String tag, int id, in Notification notification);
+    void pushNotificationToQueue(String pkg, String opPkg, int callingUid,
+            int callingPid, String tag, int id, in Notification notification,
+            inout int[] idOut, int incomingUserId);
 }
