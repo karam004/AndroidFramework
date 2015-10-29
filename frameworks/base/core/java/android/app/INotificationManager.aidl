@@ -85,6 +85,7 @@ interface INotificationManager
     boolean isQueuingEnabled();
     boolean setQueingTrue();
     boolean setQueingFalse();
+    void pushBackOnProfileChange();
 
     void pushNotificationToQueue(String pkg, String opPkg, int callingUid,
             int callingPid, String tag, int id, in Notification notification,
