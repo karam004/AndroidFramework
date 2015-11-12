@@ -56,6 +56,12 @@ public class ZenModeConfig implements Parcelable {
     public static final int SOURCE_STAR = 2;
     public static final int MAX_SOURCE = SOURCE_STAR;
 
+    // CSE622
+    public static final int LIMIT_ONE = 25;
+    public static final int LIMIT_TWO = 50;
+    public static final int LIMIT_THREE = 100;
+    public static final int LIMIT_UNLIMITED = 0;
+
     public static final int[] ALL_DAYS = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
             Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY };
     public static final int[] WEEKNIGHT_DAYS = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
@@ -100,6 +106,7 @@ public class ZenModeConfig implements Parcelable {
     private static final String EXIT_CONDITION_ATT_COMPONENT = "component";
 
     public boolean allowCalls;
+    // CSE622
     public boolean allowQueuing;
     public boolean allowMessages;
     public boolean allowEvents = DEFAULT_ALLOW_EVENTS;

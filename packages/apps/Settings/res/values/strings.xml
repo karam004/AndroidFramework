@@ -5888,9 +5888,19 @@
     <!-- [CHAR LIMIT=20] Zen mode settings: Calls option -->
     <string name="zen_mode_calls">Calls</string>
 
-    <!-- [CHAR LIMIT=20] Zen mode settings: enable queue option -->
+    <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: enable queue option -->
     <string name="zen_mode_enable_queue">Enable Queuing</string>
-    
+    <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queue limit -->
+    <string name="zen_mode_queue_limit">Queuing Limit</string>
+    <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit 25 -->
+    <string name="zen_mode_queue_limit_one">25</string>
+    <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit 50 -->
+    <string name="zen_mode_queue_limit_two">50</string>
+    <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit 100 -->
+    <string name="zen_mode_queue_limit_three">100</string>
+    <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit unlimited -->
+    <string name="zen_mode_queue_limit_unlimited">Unlimited</string>
+
     <!-- [CHAR LIMIT=20] Zen mode settings: Messages option -->
     <string name="zen_mode_messages">Messages</string>
 
