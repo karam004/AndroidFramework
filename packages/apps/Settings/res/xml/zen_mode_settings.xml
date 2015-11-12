@@ -52,6 +52,12 @@
             android:switchTextOn="" 
             android:fragment="com.android.settings.notification.QueueSettings" />
 
+    <!-- CSE622: Added queuing limit value drop down menu -->
+        <com.android.settings.notification.DropDownPreference
+                android:key="starred"
+                android:title="@string/zen_mode_queue_limit"
+                android:persistent="false" />
+
         <SwitchPreference
             android:key="messages"
             android:title="@string/zen_mode_messages"

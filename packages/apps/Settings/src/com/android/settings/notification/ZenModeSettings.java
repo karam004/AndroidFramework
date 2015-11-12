@@ -69,8 +69,12 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
     private static final String KEY_ZEN_MODE = "zen_mode";
     private static final String KEY_IMPORTANT = "important";
     private static final String KEY_CALLS = "calls";
+
     //Karamveer
     private static final String KEY_ENABLE_QUEUING = "enable_queuing";
+    // CSE622
+    private static final String KEY_QUEUE_LIMIT = "queue_limit";
+
     private static final String KEY_MESSAGES = "messages";
     private static final String KEY_STARRED = "starred";
     private static final String KEY_EVENTS = "events";
@@ -108,8 +112,12 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         final SparseArray<String> rt = new SparseArray<String>();
         rt.put(R.string.zen_mode_important_category, KEY_IMPORTANT);
         rt.put(R.string.zen_mode_calls, KEY_CALLS);
-	//Karamveer
+
+        //Karamveer
         rt.put(R.string.zen_mode_enable_queue, KEY_ENABLE_QUEUING);
+        // CSE622
+        rt.put(R.string.zen_mode_queue_limit, KEY_QUEUE_LIMIT);
+
         rt.put(R.string.zen_mode_option_title, KEY_ZEN_MODE);
         rt.put(R.string.zen_mode_messages, KEY_MESSAGES);
         rt.put(R.string.zen_mode_from_starred, KEY_STARRED);
@@ -133,7 +141,11 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
     private ZenModeConfig mConfig;
     private boolean mDisableListeners;
     private SwitchPreference mCalls;
+
+    //CSE622
     private SwitchPreference mEnableQueuing;
+    private DropDownPreference mQueueLimit;
+
     private SwitchPreference mMessages;
     private DropDownPreference mStarred;
     private SwitchPreference mEvents;
@@ -187,6 +199,7 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
             }
         });
 
+        // CSE622
         mEnableQueuing = (SwitchPreference) important.findPreference(KEY_ENABLE_QUEUING);
         Log.d("ACSPROJECT", " outside listener allowQueuing");
         mEnableQueuing.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -223,6 +236,21 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
                 return success;
             }
         });
+
+        // CSE622
+        mQueueLimit = (DropDownPreference) important.findPreference(KEY_QUEUE_LIMIT);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_one, ZenModeConfig.LIMIT_ONE);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_two, ZenModeConfig.LIMIT_TWO);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_three, ZenModeConfig.LIMIT_THREE);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_unlimited, ZenModeConfig.LIMIT_UNLIMITED);
+        mQueueLimit.setCallback(new DropDownPreference.Callback() {
+            @Override
+            public boolean onItemSelected(int pos, Object newValue) {
+                return true;
+            }
+        });
+        important.addPreference(mQueueLimit);
+
 
         mMessages = (SwitchPreference) important.findPreference(KEY_MESSAGES);
         mMessages.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
