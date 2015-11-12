@@ -1629,7 +1629,12 @@ public class NotificationManagerService extends SystemService {
         }
 
         @Override
-	public void pushBackOnProfileChange()
+        public void setQueueLimit(int limit) {
+            mNotificationQueuing.setLimit(limit);
+        }
+
+        @Override
+	    public void pushBackOnProfileChange()
         {
             pushBackNotification();
         }

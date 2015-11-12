@@ -90,4 +90,6 @@ interface INotificationManager
     void pushNotificationToQueue(String pkg, String opPkg, int callingUid,
             int callingPid, String tag, int id, in Notification notification,
             inout int[] idOut, int incomingUserId);
+
+    void setQueueLimit(int limit);
 }

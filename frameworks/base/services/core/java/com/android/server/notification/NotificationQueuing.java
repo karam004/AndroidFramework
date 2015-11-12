@@ -18,7 +18,7 @@ import android.app.Notification;
 public class NotificationQueuing {
 
     private static String TAG = "ACSPROJECT";
-    private static int limt = 1000;
+    private static int limit = 1000;
 
     private Queue<NotificationElements> notificationQueue;
 
@@ -44,6 +44,11 @@ public class NotificationQueuing {
     public void add(String pkg, String opPkg, int callingUid,
             int callingPid, String tag, int id, Notification notification,
             int[] idOut, int incomingUserId) {
+
+        if (notificationQueue.size() == limit) {
+            return;
+        }
+
         NotificationElements notificationElements = new NotificationElements();
         notificationElements.pkg = pkg;
         notificationElements.opPkg = opPkg;
@@ -63,7 +68,7 @@ public class NotificationQueuing {
     }
 
     public void setLimit(int lt) {
-        limt = lt;
+        limit = lt;
 
         if (notificationQueue.size() > lt) {
             while(notificationQueue.size() != lt){
