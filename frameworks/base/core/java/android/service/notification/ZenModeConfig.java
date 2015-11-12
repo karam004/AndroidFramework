@@ -243,7 +243,7 @@ public class ZenModeConfig implements Parcelable {
                 && other.allowQueuing == allowQueuing
                 && other.allowMessages == allowMessages
                 && other.allowFrom == allowFrom
-                && other.allowAllQueuing = allowAllQueuing      // cse 622
+                && other.allowAllQueuing == allowAllQueuing      // cse 622
                 && other.allowEvents == allowEvents
                 && Objects.equals(other.sleepMode, sleepMode)
                 && other.sleepNone == sleepNone
