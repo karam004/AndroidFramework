@@ -1175,8 +1175,11 @@ public class NotificationManagerService extends SystemService {
         public void enqueueNotificationWithTag(String pkg, String opPkg, String tag, int id,
                 Notification notification, int[] idOut, int userId) throws RemoteException {
             //abhishek
+       	    final int newMode = Settings.Global.getInt(getContext().getContentResolver(),
+			    Settings.Global.ZEN_MODE, Settings.Global.ZEN_MODE_OFF);
+            Log.d("ACSPROJECT ", "newMode in enqueueNotificationIs:" + newMode);
             Log.d("ACSPROJECT ", "isQueuingEnabled :" + isQueuingEnabled());
-            if (isQueuingEnabled()) {
+            if (isQueuingEnabled() && (newMode == 1 || newMode == 2)) {
                 pushNotificationToQueue(pkg, opPkg,Binder.getCallingUid(),
                     Binder.getCallingPid(), tag, id, notification, idOut, userId );
                 idOut[0] = id;
@@ -1623,6 +1626,12 @@ public class NotificationManagerService extends SystemService {
             }
 
             return ret;
+        }
+
+        @Override
+	public void pushBackOnProfileChange()
+        {
+            pushBackNotification();
         }
 
         @Override

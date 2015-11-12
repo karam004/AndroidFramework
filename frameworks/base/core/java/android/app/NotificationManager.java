@@ -144,8 +144,8 @@ public class NotificationManager
 
         int[] idOut = new int[1];
         INotificationManager service = getService();
-                
         String pkg = mContext.getPackageName();
+        
         if (notification.sound != null) {
             notification.sound = notification.sound.getCanonicalUri();
             if (StrictMode.vmFileUriExposureEnabled()) {
