@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="queuing_settings"
+    android:title="@string/zen_mode_enable_queue" >
+
+    <PreferenceCategory
+        android:key="important"
+        android:title="@string/zen_mode_important_category" >
+
+        <SwitchPreference
+            android:key="enable_queuing"
+            android:title="@string/zen_mode_enable_queue"
+            android:persistent="false"
+            android:switchTextOff=""
+            android:switchTextOn="" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -49,7 +49,8 @@
             android:title="@string/zen_mode_enable_queue"
             android:persistent="false"
             android:switchTextOff=""
-            android:switchTextOn="" />
+            android:switchTextOn="" 
+            android:fragment="com.android.settings.notification.QueueSettings" />
 
         <SwitchPreference
             android:key="messages"
