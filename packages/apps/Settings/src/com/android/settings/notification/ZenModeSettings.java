@@ -239,14 +239,30 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
 
         // CSE622
         mQueueLimit = (DropDownPreference) important.findPreference(KEY_QUEUE_LIMIT);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_unlimited, ZenModeConfig.LIMIT_UNLIMITED);
         mQueueLimit.addItem(R.string.zen_mode_queue_limit_one, ZenModeConfig.LIMIT_ONE);
         mQueueLimit.addItem(R.string.zen_mode_queue_limit_two, ZenModeConfig.LIMIT_TWO);
         mQueueLimit.addItem(R.string.zen_mode_queue_limit_three, ZenModeConfig.LIMIT_THREE);
-        mQueueLimit.addItem(R.string.zen_mode_queue_limit_unlimited, ZenModeConfig.LIMIT_UNLIMITED);
         mQueueLimit.setCallback(new DropDownPreference.Callback() {
             @Override
             public boolean onItemSelected(int pos, Object newValue) {
-                return true;
+                if (mDisableListeners) return true;
+                final int val = (Integer) newValue;
+                if (val == mConfig.allowAllQueuing) return true;
+                if (DEBUG) Log.d(TAG, "Limit option " + val);
+                final ZenModeConfig newConfig = mConfig.copy();
+                newConfig.allowAllQueuing = val;
+
+                final INotificationManager nm = INotificationManager.Stub.asInterface(
+                        ServiceManager.getService(Context.NOTIFICATION_SERVICE));
+                try {
+                    nm.setQueueLimit(val);
+                }catch (Exception e) {
+                   Log.w(TAG, "Error calling NotificationManagerService", e);
+                   return false;
+                }
+                return setZenModeConfig(newConfig);
+        
             }
         });
         important.addPreference(mQueueLimit);
@@ -480,6 +496,8 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         Log.d(TAG, "Inside updateControls Functions ,Setting option Enable Queuing to " + mConfig.allowQueuing);
 	    mEnableQueuing.setChecked(mConfig.allowQueuing);
 	}
+        // cse 600
+        mQueueLimit.setSelectedValue(mConfig.allowAllQueuing);
 
         mMessages.setChecked(mConfig.allowMessages);
         mStarred.setSelectedValue(mConfig.allowFrom);
@@ -498,6 +516,8 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
 
     private void updateStarredEnabled() {
         mStarred.setEnabled(mConfig.allowCalls || mConfig.allowMessages);
+        // cse 622
+        mQueueLimit.setEnabled(mConfig.allowQueuing);
     }
 
     private void refreshAutomationSection() {
