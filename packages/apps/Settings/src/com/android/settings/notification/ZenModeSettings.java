@@ -163,21 +163,14 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         switch (val) {
             case 0 : 
                 return 1000;
-                break;
             case 1 :
                 return 2;
-                break;
             case 2 :
                 return 4;
-                break;
             case 3:
                 return 6;
-                break;
-            default:
-                return 1000;
-                break;
         }
-
+        return 1000;
     }
 
     @Override
