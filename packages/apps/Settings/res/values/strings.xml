@@ -5893,11 +5893,11 @@
     <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queue limit -->
     <string name="zen_mode_queue_limit">Queue Limit</string>
     <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit 25 -->
-    <string name="zen_mode_queue_limit_one">25</string>
+    <string name="zen_mode_queue_limit_one">2</string>
     <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit 50 -->
-    <string name="zen_mode_queue_limit_two">50</string>
+    <string name="zen_mode_queue_limit_two">4</string>
     <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit 100 -->
-    <string name="zen_mode_queue_limit_three">100</string>
+    <string name="zen_mode_queue_limit_three">6</string>
     <!-- CSE622: [CHAR LIMIT=20] Zen mode settings: queuing limit unlimited -->
     <string name="zen_mode_queue_limit_unlimited">Unlimited</string>
 

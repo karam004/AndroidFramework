@@ -46,7 +46,8 @@ public class NotificationQueuing {
             int[] idOut, int incomingUserId) {
 
         if (notificationQueue.size() == limit) {
-            return;
+            Log.d(TAG, "Notification Queue full, drooping last one");
+            notificationQueue.remove();
         }
 
         NotificationElements notificationElements = new NotificationElements();
@@ -69,8 +70,9 @@ public class NotificationQueuing {
 
     public void setLimit(int lt) {
         limit = lt;
-
+        Log.d(TAG, "setting queue limit to " + lt);
         if (notificationQueue.size() > lt) {
+            Log.d(TAG,"limit less than size, dropping last " + (notificationQueue.size() - lt) + " notification");
             while(notificationQueue.size() != lt){
                 notificationQueue.remove();
             }

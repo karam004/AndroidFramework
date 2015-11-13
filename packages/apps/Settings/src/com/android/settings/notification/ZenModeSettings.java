@@ -159,6 +159,27 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
     private Preference mConditionProviders;
     private AlertDialog mDialog;
 
+    private int getLimit(int val) {
+        switch (val) {
+            case 0 : 
+                return 1000;
+                break;
+            case 1 :
+                return 2;
+                break;
+            case 2 :
+                return 4;
+                break;
+            case 3:
+                return 6;
+                break;
+            default:
+                return 1000;
+                break;
+        }
+
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -256,7 +277,7 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
                 final INotificationManager nm = INotificationManager.Stub.asInterface(
                         ServiceManager.getService(Context.NOTIFICATION_SERVICE));
                 try {
-                    nm.setQueueLimit(val);
+                    nm.setQueueLimit(getLimit(val));
                 }catch (Exception e) {
                    Log.w(TAG, "Error calling NotificationManagerService", e);
                    return false;

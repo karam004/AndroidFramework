@@ -49,8 +49,7 @@
             android:title="@string/zen_mode_enable_queue"
             android:persistent="false"
             android:switchTextOff=""
-            android:switchTextOn="" 
-            android:fragment="com.android.settings.notification.QueueSettings" />
+            android:switchTextOn="" />
 
     <!-- CSE622: Added queuing limit value drop down menu -->
         <com.android.settings.notification.DropDownPreference
