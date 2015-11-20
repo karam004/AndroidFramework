@@ -17,4 +17,10 @@
 
     </PreferenceCategory>
 
+        <PreferenceCategory
+        android:key="applist"
+        android:title="@string/zen_mode_important_category" >
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
