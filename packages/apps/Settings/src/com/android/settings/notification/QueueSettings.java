@@ -7,14 +7,18 @@ import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ServiceManager;
 import android.os.Handler;
 import android.provider.Settings.Global;
 import android.provider.Settings.System;
 import android.telephony.TelephonyManager;
+import android.app.INotificationManager;
 import android.util.Log;
 
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.CheckBoxPreference;
+import android.preference.Preference.OnPreferenceChangeListener;
 
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
@@ -24,6 +28,7 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
 
 import java.util.List;
+import java.util.Objects;
 
 public class QueueSettings extends SettingsPreferenceFragment {
 
@@ -51,21 +56,50 @@ public class QueueSettings extends SettingsPreferenceFragment {
         PreferenceCategory targetCategory = (PreferenceCategory)findPreference(APP_LIST);
 
         for (ApplicationInfo packageInfo : packages) {
-            //create one check box for each app
-            CheckBoxPreference checkBoxPreference = new CheckBoxPreference(mContext);
- 
-            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
 
-                Log.d(TAG, "Installed package :" + packageInfo.packageName);
-                //make sure each key is unique 
-                checkBoxPreference.setKey(packageInfo.packageName);
-                checkBoxPreference.setTitle(packageInfo.packageName);
-                checkBoxPreference.setIcon(packageInfo.icon);
-                checkBoxPreference.setChecked(true);
+            CheckBoxPreference checkBoxPreference = null;
 
-                targetCategory.addPreference(checkBoxPreference);
+            // try to find the checkBoxPreference
+            checkBoxPreference = (CheckBoxPreference)targetCategory.findPreference(packageInfo.packageName);
+
+            if (checkBoxPreference == null) {
+                //create one check box for each app
+                checkBoxPreference = new CheckBoxPreference(mContext);
+     
+                if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+
+                    Log.d(TAG, "Installed package :" + packageInfo.packageName);
+                    //make sure each key is unique 
+                    checkBoxPreference.setKey(packageInfo.packageName);
+                    checkBoxPreference.setTitle(packageInfo.name);
+                    checkBoxPreference.setIcon(packageInfo.icon);
+                    checkBoxPreference.setChecked(true);
+
+                    targetCategory.addPreference(checkBoxPreference);
+                }
+
+                checkBoxPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        final boolean val = (Boolean) newValue;
+
+                        Log.d(TAG, "checked =" + val);
+
+                        final INotificationManager nm = INotificationManager.Stub.asInterface(
+                                ServiceManager.getService(Context.NOTIFICATION_SERVICE));
+                        boolean success = false;
+                        try {
+
+                            success = nm.setQueuingPreference(preference.getKey(), val);
+
+                        }catch (Exception e) {
+                           Log.w(TAG, "Error calling NotificationManagerService", e);
+                           return false;
+                        }
+                        return success;
+                    }
+                });
             }
-            
         }
 
     }

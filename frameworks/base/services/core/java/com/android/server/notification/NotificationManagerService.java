@@ -1179,7 +1179,15 @@ public class NotificationManagerService extends SystemService {
 			    Settings.Global.ZEN_MODE, Settings.Global.ZEN_MODE_OFF);
             Log.d("ACSPROJECT ", "newMode in enqueueNotificationIs:" + newMode);
             Log.d("ACSPROJECT ", "isQueuingEnabled :" + isQueuingEnabled());
-            if (isQueuingEnabled() && (newMode == 1 || newMode == 2)) {
+
+            boolean appEnquing = false;
+            if (!checkIsSystemApp(pkg)) {
+                appEnquing = mNotificationQueuing.isQueuingEnabledForApp(pkg);
+            }
+
+            Log.d("ACSPROJECT", "is queueing enabled for app " + appEnquing );
+
+            if (isQueuingEnabled() && (newMode == 1 || newMode == 2) && appEnquing) {
                 pushNotificationToQueue(pkg, opPkg,Binder.getCallingUid(),
                     Binder.getCallingPid(), tag, id, notification, idOut, userId );
                 idOut[0] = id;
@@ -1602,7 +1610,7 @@ public class NotificationManagerService extends SystemService {
             return mConditionProviders.isSystemConditionProviderEnabled(path);
         }
         
-        // abhishek        
+        // acsproject        
         @Override
         public boolean isQueuingEnabled(){
             return mZenModeHelper.getConfig().allowQueuing;
@@ -1629,7 +1637,12 @@ public class NotificationManagerService extends SystemService {
         }
 
         @Override
-	public void pushBackOnProfileChange()
+        public boolean setQueuingPreference(String key, boolean val) {
+           return mNotificationQueuing.setAppPreference(key, val);
+        }
+
+        @Override
+	    public void pushBackOnProfileChange()
         {
             pushBackNotification();
         }
@@ -2930,6 +2943,26 @@ public class NotificationManagerService extends SystemService {
         } catch (RemoteException re) {
             throw new SecurityException("Unknown package " + pkg + "\n" + re);
         }
+    }
+
+    // acsproject
+    private static boolean checkIsSystemApp(String pkg) {
+        try {
+            ApplicationInfo ai = AppGlobals.getPackageManager().getApplicationInfo(
+                    pkg, 0, UserHandle.getCallingUserId());
+            if (ai == null) {
+                throw new SecurityException("Unknown package " + pkg);
+            }
+        
+            if ((ai.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                return true;
+            }
+        
+        } catch (RemoteException re) {
+            throw new SecurityException("Unknown package " + pkg + "\n" + re);
+        }
+
+        return false;
     }
 
     private static String callStateToString(int state) {
