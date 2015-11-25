@@ -447,11 +447,11 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
         }
 
         //Karamveer
-	if(mEnableQueuing != null)
-	{
-        Log.d(TAG, "Inside updateControls Functions ,Setting option Enable Queuing to " + mConfig.allowQueuing);
-	    mEnableQueuing.setChecked(mConfig.allowQueuing);
-	}
+    	if(mEnableQueuing != null)
+    	{
+            Log.d(TAG, "Inside updateControls Functions ,Setting option Enable Queuing to " + mConfig.allowQueuing);
+    	    mEnableQueuing.setChecked(mConfig.allowQueuing);
+    	}
 
         mMessages.setChecked(mConfig.allowMessages);
         mStarred.setSelectedValue(mConfig.allowFrom);
