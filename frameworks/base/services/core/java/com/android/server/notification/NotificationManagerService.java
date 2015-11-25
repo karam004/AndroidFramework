@@ -2954,14 +2954,15 @@ public class NotificationManagerService extends SystemService {
                 throw new SecurityException("Unknown package " + pkg);
             }
         
-            if ((ai.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+            if ((ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                Log.d("ACSPROJECT", "System app " + pkg);
                 return true;
             }
         
         } catch (RemoteException re) {
             throw new SecurityException("Unknown package " + pkg + "\n" + re);
         }
-
+        Log.d("ACSPROJECT", "Not a System app " + pkg);
         return false;
     }
 

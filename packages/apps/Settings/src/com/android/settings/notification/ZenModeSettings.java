@@ -133,7 +133,6 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
     private ZenModeConfig mConfig;
     private boolean mDisableListeners;
     private SwitchPreference mCalls;
-    private SwitchPreference mEnableQueuing;
     private SwitchPreference mMessages;
     private DropDownPreference mStarred;
     private SwitchPreference mEvents;
@@ -187,42 +186,6 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
             }
         });
 
-        mEnableQueuing = (SwitchPreference) important.findPreference(KEY_ENABLE_QUEUING);
-        Log.d("ACSPROJECT", " outside listener allowQueuing");
-        mEnableQueuing.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (mDisableListeners) return true;
-                final boolean val = (Boolean) newValue;
-                if (val == mConfig.allowQueuing) return true;
-                if (DEBUG) Log.d("ACSPROJECT", "onPrefChange allowQueuing=" + val);
-
-                final INotificationManager nm = INotificationManager.Stub.asInterface(
-                        ServiceManager.getService(Context.NOTIFICATION_SERVICE));
-                boolean success = false;
-                try {
-
-                    if (val) {
-                        success = nm.setQueingTrue();
-                    }else {
-                        success = nm.setQueingFalse();
-                    }
-                    final ZenModeConfig config = nm.getZenModeConfig();
-
-                    if (success) {
-                        mConfig = config;
-                        if (DEBUG) Log.d("ACSPROJECT", "Saved mConfig=" + mConfig);
-                        updateEndSummary();
-                        updateStarredEnabled();
-                    }
-
-                }catch (Exception e) {
-                   Log.w(TAG, "Error calling NotificationManagerService", e);
-                   return false;
-                }
-                return success;
-            }
-        });
 
         mMessages = (SwitchPreference) important.findPreference(KEY_MESSAGES);
         mMessages.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -446,12 +409,6 @@ public class ZenModeSettings extends SettingsPreferenceFragment implements Index
             mCalls.setChecked(mConfig.allowCalls);
         }
 
-        //Karamveer
-    	if(mEnableQueuing != null)
-    	{
-            Log.d(TAG, "Inside updateControls Functions ,Setting option Enable Queuing to " + mConfig.allowQueuing);
-    	    mEnableQueuing.setChecked(mConfig.allowQueuing);
-    	}
 
         mMessages.setChecked(mConfig.allowMessages);
         mStarred.setSelectedValue(mConfig.allowFrom);

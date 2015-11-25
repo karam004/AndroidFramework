@@ -43,14 +43,6 @@
             android:switchTextOff=""
             android:switchTextOn="" />
 
-    <!-- Karamveer Add enale queuing option-->
-        <SwitchPreference
-            android:key="enable_queuing"
-            android:title="@string/zen_mode_enable_queue"
-            android:persistent="false"
-            android:switchTextOff=""
-            android:switchTextOn="" 
-            android:fragment="com.android.settings.notification.QueueSettings" />
 
         <SwitchPreference
             android:key="messages"
@@ -59,6 +51,15 @@
             android:switchTextOff=""
             android:switchTextOn="" />
 
+        <!-- Karamveer Add enale queuing option-->
+        <Preference
+            android:key="enable_queuing"
+            android:title="@string/zen_mode_enable_queue"
+            android:persistent="false"
+            android:switchTextOff=""
+            android:switchTextOn="" 
+            android:fragment="com.android.settings.notification.QueueSettings" />
+            
         <com.android.settings.notification.DropDownPreference
                 android:key="starred"
                 android:title="@string/zen_mode_from"

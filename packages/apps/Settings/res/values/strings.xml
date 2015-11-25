@@ -5888,8 +5888,10 @@
     <!-- [CHAR LIMIT=20] Zen mode settings: Calls option -->
     <string name="zen_mode_calls">Calls</string>
 
+    <!-- ACSPROJECT -->
     <!-- [CHAR LIMIT=20] Zen mode settings: enable queue option -->
     <string name="zen_mode_enable_queue">Enable Queuing</string>
+    <string name="zen_mode_app_list">App List</string>
     
     <!-- [CHAR LIMIT=20] Zen mode settings: Messages option -->
     <string name="zen_mode_messages">Messages</string>
