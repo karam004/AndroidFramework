@@ -81,7 +81,7 @@ interface INotificationManager
     oneway void setAutomaticZenModeConditions(in Uri[] conditionIds);
     Condition[] getAutomaticZenModeConditions();
 
-    // abhishek
+    // ACSPROJECT
     boolean isQueuingEnabled();
     boolean setQueingTrue();
     boolean setQueingFalse();
@@ -92,4 +92,6 @@ interface INotificationManager
             inout int[] idOut, int incomingUserId);
 
     boolean setQueuingPreference(String key, boolean val);
+
+    boolean setQueueLimit(int limit);
 }

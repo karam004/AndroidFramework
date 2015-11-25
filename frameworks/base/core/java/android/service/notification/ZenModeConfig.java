@@ -56,6 +56,13 @@ public class ZenModeConfig implements Parcelable {
     public static final int SOURCE_STAR = 2;
     public static final int MAX_SOURCE = SOURCE_STAR;
 
+    // CSE622
+
+    public static final int LIMIT_UNLIMITED = 0;
+    public static final int LIMIT_ONE = 1;
+    public static final int LIMIT_TWO = 2;
+    public static final int LIMIT_THREE = 3;
+
     public static final int[] ALL_DAYS = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
             Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY };
     public static final int[] WEEKNIGHT_DAYS = { Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
@@ -73,7 +80,9 @@ public class ZenModeConfig implements Parcelable {
     private static final String ZEN_ATT_VERSION = "version";
     private static final String ALLOW_TAG = "allow";
     private static final String ALLOW_ATT_CALLS = "calls";
+    // cse 622
     private static final String ALLOW_ATT_ENABLE_QUEUING= "enable_queuing";
+    private static final String ALLOW_ATT_QUEUE_LIMIT = "queue_limit";
     private static final String ALLOW_ATT_MESSAGES = "messages";
     private static final String ALLOW_ATT_FROM = "from";
     private static final String ALLOW_ATT_EVENTS = "events";
@@ -100,7 +109,10 @@ public class ZenModeConfig implements Parcelable {
     private static final String EXIT_CONDITION_ATT_COMPONENT = "component";
 
     public boolean allowCalls;
+    // CSE622
     public boolean allowQueuing;
+    public int queueLimit = LIMIT_UNLIMITED;
+
     public boolean allowMessages;
     public boolean allowEvents = DEFAULT_ALLOW_EVENTS;
     public int allowFrom = SOURCE_ANYONE;
@@ -142,6 +154,9 @@ public class ZenModeConfig implements Parcelable {
             source.readTypedArray(conditionIds, Uri.CREATOR);
         }
         allowFrom = source.readInt();
+        // cse 622
+        queueLimit = source.readInt();
+
         exitCondition = source.readParcelable(null);
         exitConditionComponent = source.readParcelable(null);
     }
@@ -176,6 +191,9 @@ public class ZenModeConfig implements Parcelable {
             dest.writeInt(0);
         }
         dest.writeInt(allowFrom);
+        // cse 622
+        dest.writeInt(queueLimit);
+
         dest.writeParcelable(exitCondition, 0);
         dest.writeParcelable(exitConditionComponent, 0);
     }
@@ -187,6 +205,7 @@ public class ZenModeConfig implements Parcelable {
             .append(",allowQueuing=").append(allowQueuing)
             .append(",allowMessages=").append(allowMessages)
             .append(",allowFrom=").append(sourceToString(allowFrom))
+            .append(",queueLimit=").append(""+queueLimit) // cse 622 // todo : write toString
             .append(",allowEvents=").append(allowEvents)
             .append(",sleepMode=").append(sleepMode)
             .append(",sleepStart=").append(sleepStartHour).append('.').append(sleepStartMinute)
@@ -214,6 +233,7 @@ public class ZenModeConfig implements Parcelable {
         }
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ZenModeConfig)) return false;
@@ -223,6 +243,7 @@ public class ZenModeConfig implements Parcelable {
                 && other.allowQueuing == allowQueuing
                 && other.allowMessages == allowMessages
                 && other.allowFrom == allowFrom
+                && other.queueLimit == queueLimit      // cse 622
                 && other.allowEvents == allowEvents
                 && Objects.equals(other.sleepMode, sleepMode)
                 && other.sleepNone == sleepNone
@@ -238,7 +259,7 @@ public class ZenModeConfig implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(allowCalls, allowQueuing, allowMessages, allowFrom, allowEvents, sleepMode, sleepNone,
+        return Objects.hash(allowCalls, allowQueuing, allowMessages, allowFrom, queueLimit, allowEvents, sleepMode, sleepNone,
                 sleepStartHour, sleepStartMinute, sleepEndHour, sleepEndMinute,
                 Arrays.hashCode(conditionComponents), Arrays.hashCode(conditionIds),
                 exitCondition, exitConditionComponent);
@@ -309,6 +330,8 @@ public class ZenModeConfig implements Parcelable {
                     rt.allowMessages = safeBoolean(parser, ALLOW_ATT_MESSAGES, false);
                     rt.allowEvents = safeBoolean(parser, ALLOW_ATT_EVENTS, DEFAULT_ALLOW_EVENTS);
                     rt.allowFrom = safeInt(parser, ALLOW_ATT_FROM, SOURCE_ANYONE);
+                    // cse 622
+                    rt.queueLimit = safeInt(parser,ALLOW_ATT_QUEUE_LIMIT, LIMIT_UNLIMITED);
                     if (rt.allowFrom < SOURCE_ANYONE || rt.allowFrom > MAX_SOURCE) {
                         throw new IndexOutOfBoundsException("bad source in config:" + rt.allowFrom);
                     }
@@ -354,6 +377,8 @@ public class ZenModeConfig implements Parcelable {
         out.attribute(null, ALLOW_ATT_MESSAGES, Boolean.toString(allowMessages));
         out.attribute(null, ALLOW_ATT_EVENTS, Boolean.toString(allowEvents));
         out.attribute(null, ALLOW_ATT_FROM, Integer.toString(allowFrom));
+        // cse 622
+        out.attribute(null, ALLOW_ATT_QUEUE_LIMIT, Integer.toString(queueLimit));
         out.endTag(null, ALLOW_TAG);
 
         out.startTag(null, SLEEP_TAG);

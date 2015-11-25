@@ -21,6 +21,8 @@ import android.preference.CheckBoxPreference;
 import android.preference.SwitchPreference;
 import android.preference.Preference.OnPreferenceChangeListener;
 
+import android.service.notification.ZenModeConfig;
+
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
 
@@ -31,17 +33,24 @@ import com.android.settings.Utils;
 import java.util.List;
 import java.util.Objects;
 
+/**
+* ACSPROJECT
+* Class which extends Preference fragment, responsible for 
+* capturing quing setting and maintaing state
+**/
 public class QueueSettings extends SettingsPreferenceFragment {
 
 	private static final String TAG = "ACSPROJECT";
     private static final String APP_LIST = "applist";
     private static final String KEY_ENABLE_QUEUING = "enable_queuing";
+    private static final String KEY_QUEUE_LIMIT = "queue_limit";
     private final SettingsObserver mSettingsObserver = new SettingsObserver();
 
     private Context mContext;
 
     private SwitchPreference mEnableQueuing;
     private PreferenceCategory mtargetCategory;
+    private DropDownPreference mQueueLimit;
     private INotificationManager nm;
 
     @Override
@@ -73,6 +82,10 @@ public class QueueSettings extends SettingsPreferenceFragment {
                         success = nm.setQueingFalse();
                     }
 
+                    if (success) {
+                        updateControls();
+                    }
+
                 }catch (Exception e) {
                    Log.w(TAG, "Error calling NotificationManagerService", e);
                    return false;
@@ -81,7 +94,27 @@ public class QueueSettings extends SettingsPreferenceFragment {
             }
         });
 
+        // Queue Limit
+        mQueueLimit = (DropDownPreference) findPreference(KEY_QUEUE_LIMIT);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_unlimited, ZenModeConfig.LIMIT_UNLIMITED);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_one, ZenModeConfig.LIMIT_ONE);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_two, ZenModeConfig.LIMIT_TWO);
+        mQueueLimit.addItem(R.string.zen_mode_queue_limit_three, ZenModeConfig.LIMIT_THREE);
+        mQueueLimit.setCallback(new DropDownPreference.Callback() {
+            @Override
+            public boolean onItemSelected(int pos, Object newValue) {
+                final int val = (Integer) newValue;
+                Log.d(TAG, "Limit option " + val);
 
+                try {
+                    return nm.setQueueLimit(val);
+                }catch (Exception e) {
+                   Log.w(TAG, "Error calling NotificationManagerService", e);
+                   return false;
+                }
+        
+            }
+        });
 
 
         // List of Apps
@@ -109,7 +142,9 @@ public class QueueSettings extends SettingsPreferenceFragment {
                     Log.d(TAG, "Installed package :" + packageInfo.packageName);
                     //make sure each key is unique 
                     checkBoxPreference.setKey(packageInfo.packageName);
-                    checkBoxPreference.setTitle(packageInfo.applicationInfo.processName);
+                    checkBoxPreference.setTitle(packageInfo.packageName.
+                                                substring(packageInfo.packageName.
+                                                lastIndexOf('.')+1));
                     checkBoxPreference.setIcon(packageInfo.icon);
                     checkBoxPreference.setChecked(true);
 
@@ -160,10 +195,26 @@ public class QueueSettings extends SettingsPreferenceFragment {
         if(mEnableQueuing != null)
         {   
             try {
-               mEnableQueuing.setChecked(nm.getZenModeConfig().allowQueuing);
+                boolean allowQueuing = nm.getZenModeConfig().allowQueuing;
+                mEnableQueuing.setChecked(allowQueuing);
+
+                mQueueLimit.setSelectedValue(nm.getZenModeConfig().queueLimit);
+                mQueueLimit.setEnabled(allowQueuing);
+
+                if (mtargetCategory != null) {
+                    mtargetCategory.setEnabled(allowQueuing);
+                }
             } catch (Exception e) {
 
                 mEnableQueuing.setChecked(false);
+            }
+        }else {
+            if (mtargetCategory != null) {
+                mtargetCategory.setEnabled(false);
+            }
+
+            if (mQueueLimit != null) {
+                mQueueLimit.setEnabled(false);
             }
         }
     }

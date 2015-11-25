@@ -1642,6 +1642,14 @@ public class NotificationManagerService extends SystemService {
         }
 
         @Override
+        public boolean setQueueLimit(int limit) {
+            final ZenModeConfig newConfig = mZenModeHelper.getConfig().copy();
+            newConfig.queueLimit = limit;
+            mNotificationQueuing.setLimit(limit);
+            return setZenModeConfig(newConfig);
+        }
+
+        @Override
 	    public void pushBackOnProfileChange()
         {
             pushBackNotification();

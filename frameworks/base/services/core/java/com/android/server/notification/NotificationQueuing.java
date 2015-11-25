@@ -20,6 +20,8 @@ import android.app.Notification;
 public class NotificationQueuing {
 
     private static String TAG = "ACSPROJECT";
+    // limit on size of quue
+    private static int limit = 1000;
     // queue to hold notification
     private Queue<NotificationElements> notificationQueue;
     // Application specific preference  --key as package name of APP
@@ -50,6 +52,12 @@ public class NotificationQueuing {
             int[] idOut, int incomingUserId) {
 
         Log.d(TAG, "Enquing request for " + pkg);
+
+        if (notificationQueue.size() == limit) {
+            Log.d(TAG, "Notification Queue full, drooping last one");
+            notificationQueue.remove();
+        }
+
         if (preferenceSet.contains(pkg)) {
             Log.d(TAG, "Enquing disabled for " + pkg);
             return;
@@ -94,6 +102,32 @@ public class NotificationQueuing {
             return false;
         }
         return true;
+    }
+
+    public void setLimit(int lt) {
+        limit = getLimit(lt);
+        Log.d(TAG, "setting queue limit to " + limit);
+        if (notificationQueue.size() > limit) {
+            Log.d(TAG,"limit less than size, dropping last " + (notificationQueue.size() - limit) + " notification");
+            while(notificationQueue.size() != limit){
+                notificationQueue.remove();
+            }
+        }
+    }
+
+
+    private int getLimit(int val) {
+        switch (val) {
+            case 0 : 
+                return 1000;
+            case 1 :
+                return 2;
+            case 2 :
+                return 4;
+            case 3:
+                return 6;
+        }
+        return 1000;
     }
 
 }

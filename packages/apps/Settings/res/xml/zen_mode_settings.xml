@@ -54,7 +54,7 @@
         <!-- Karamveer Add enale queuing option-->
         <Preference
             android:key="enable_queuing"
-            android:title="@string/zen_mode_enable_queue"
+            android:title="@string/zen_mode_notification_queue"
             android:persistent="false"
             android:switchTextOff=""
             android:switchTextOn="" 

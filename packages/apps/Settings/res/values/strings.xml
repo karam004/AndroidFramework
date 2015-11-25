@@ -5890,9 +5890,15 @@
 
     <!-- ACSPROJECT -->
     <!-- [CHAR LIMIT=20] Zen mode settings: enable queue option -->
+    <string name="zen_mode_notification_queue">Notification Queuing</string>
     <string name="zen_mode_enable_queue">Enable Queuing</string>
     <string name="zen_mode_app_list">App List</string>
-    
+    <string name="zen_mode_queue_limit">Queue Limit</string>
+    <string name="zen_mode_queue_limit_unlimited">Unlimited</string>
+    <string name="zen_mode_queue_limit_one">2</string>
+    <string name="zen_mode_queue_limit_two">4</string>
+    <string name="zen_mode_queue_limit_three">6</string>
+
     <!-- [CHAR LIMIT=20] Zen mode settings: Messages option -->
     <string name="zen_mode_messages">Messages</string>
 
