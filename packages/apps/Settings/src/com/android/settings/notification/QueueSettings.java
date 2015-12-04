@@ -145,7 +145,7 @@ public class QueueSettings extends SettingsPreferenceFragment {
                     checkBoxPreference.setTitle(packageInfo.packageName.
                                                 substring(packageInfo.packageName.
                                                 lastIndexOf('.')+1));
-                    checkBoxPreference.setIcon(packageInfo.icon);
+                    checkBoxPreference.setIcon(packageInfo.loadIcon(pm));
                     checkBoxPreference.setChecked(true);
 
                     mtargetCategory.addPreference(checkBoxPreference);
