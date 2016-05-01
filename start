@@ -1,0 +1,10 @@
+source build/envsetup.sh
+
+lunch <target platform>
+
+make -j8 - 32
+
+set_stuff_for_environment
+
+emulator
+
